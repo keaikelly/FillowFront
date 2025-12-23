@@ -7,9 +7,6 @@ import {
   CardTitle,
 } from "./ui/card";
 
-// 공통 버튼 컴포넌트
-import { Button } from "./ui/button";
-
 import { Check } from "lucide-react"; //체크아이콘
 
 // props '타입' 정의
@@ -75,15 +72,12 @@ export default function PlanStep(
               ))}
             </ul>
 
-            {/* 플랜 선택 버튼 */}
-            <Button
-              className="w-full bg-transparent"
-              size="lg"
-              variant="outline"
+            <button
+              className="w-full inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none border border-border bg-transparent hover:bg-muted h-11 px-8"
               onClick={() => onPlanSelect("starter")}
             >
               {/* 현재 선택된 플랜이면 상태 표시 */}
-              {selectedPlan === "starter" ? (
+              {selectedPlan === "standard" ? (
                 <>
                   <Check className="h-5 w-5 mr-2" />
                   선택됨
@@ -91,7 +85,7 @@ export default function PlanStep(
               ) : (
                 "선택하기"
               )}
-            </Button>
+            </button>
           </CardContent>
         </Card>
 
@@ -131,9 +125,8 @@ export default function PlanStep(
               ))}
             </ul>
 
-            <Button
-              className="w-full"
-              size="lg"
+            <button
+              className="w-full inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8"
               onClick={() => onPlanSelect("core")}
             >
               {selectedPlan === "core" ? (
@@ -144,7 +137,7 @@ export default function PlanStep(
               ) : (
                 "선택하기"
               )}
-            </Button>
+            </button>
           </CardContent>
         </Card>
 
@@ -178,10 +171,8 @@ export default function PlanStep(
               ))}
             </ul>
 
-            <Button
-              className="w-full bg-transparent"
-              size="lg"
-              variant="outline"
+            <button
+              className="w-full inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none border border-border bg-transparent hover:bg-muted h-11 px-8"
               onClick={() => onPlanSelect("pro")}
             >
               {selectedPlan === "pro" ? (
@@ -192,7 +183,7 @@ export default function PlanStep(
               ) : (
                 "선택하기"
               )}
-            </Button>
+            </button>
           </CardContent>
         </Card>
       </div>
