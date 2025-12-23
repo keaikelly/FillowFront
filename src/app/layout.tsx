@@ -25,9 +25,9 @@ export const metadata: Metadata = {
   description: "[FILLOW] AI 기반 단위경제흐름 계산기 및 회계 서비스",
 
   icons: {
-    icon: [{ url: "/logo.png", type: "image/png", sizes: "any" }],
-    shortcut: "/logo.png",
-    apple: "/logo.png",
+    icon: [{ url: "/tabLogo.png", type: "image/png", sizes: "any" }],
+    shortcut: "/tabLogo.png",
+    apple: "/tabLogo.png",
   },
 };
 
