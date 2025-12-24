@@ -12,10 +12,16 @@ export default function ProductPage() {
   const [targetPrice, setTargetPrice] = useState(""); //목표판매가
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    // async: 비동기 처리 함수
     setLoading(true);
-    // TODO: 나중에 백엔드에 제품 정보 저장(API 호출, await 비동기처리(동기로. 결과가 올때까지 기다림))
-    router.push("/channel");
+    try {
+      // TODO: 나중에 백엔드에 제품 정보 저장(API 호출, await 비동기처리(동기로. 결과가 올때까지 기다림))
+      await new Promise((r) => setTimeout(r, 800)); // 데모용으로 최소 0.8초는 로딩 보여주기
+      router.push("/channel");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

@@ -1,6 +1,8 @@
 // 공통으로 사용하는 상단 헤더 컴포넌트
 "use client";
 
+import Link from "next/link";
+
 // 메인 헤더 컴포넌트
 export default function MainHeader() {
   return (
@@ -12,7 +14,8 @@ export default function MainHeader() {
     <header className="border-b sticky top-0 backdrop-blur supports-backdrop-filter:bg-background/60 z-50">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* 왼쪽 영역: 로고 + 슬로건 */}
-        <div className="flex items-center gap-4">
+        <Link href="/" className="flex items-center gap-4">
+          {/*로고 누르면 첫 페이지 (플랜)*/}
           <img src="/logo.png" alt="Logo" className="h-10 w-auto" />
           <div className="border-l pl-4">
             {/*왼쪽 선*/}
@@ -20,7 +23,7 @@ export default function MainHeader() {
               사업자를 위한 스마트 회계
             </p>
           </div>
-        </div>
+        </Link>
       </div>
     </header>
   );
