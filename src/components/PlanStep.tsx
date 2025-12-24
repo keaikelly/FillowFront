@@ -23,7 +23,7 @@ export default function PlanStep(
   return (
     // animate-in ...      : 페이지 진입 애니메이션
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="text-center space-y-4 pt-6 pb-16 ">
+      <div className="text-center space-y-4 py-10">
         <h2 className="text-5xl font-bold text-balance">
           사업의 규모에 맞는
           <br />
