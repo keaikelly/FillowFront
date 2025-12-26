@@ -1,4 +1,4 @@
-"use client"; //클라이언트 컴포넌트. useState, useEffect, useRouter 같은 훅을 쓰려면 반드시 필요
+"use client"; //클라이언트 컴포넌트. useState, useRouter 같은 훅을 쓰려면 반드시 필요
 
 import { useState } from "react";
 import { useRouter } from "next/navigation"; // 페이지 이동 훅 (useNavigate)

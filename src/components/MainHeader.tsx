@@ -24,6 +24,21 @@ export default function MainHeader() {
             </p>
           </div>
         </Link>
+        {/* 오른쪽 영역: 로그인 / 회원가입 */}
+        <div className="flex items-center gap-2">
+          <Link
+            href="/login"
+            className="inline-flex items-center justify-center rounded-md text-xs font-medium px-3 h-8 text-muted-foreground hover:text-foreground hover:bg-muted/50"
+          >
+            로그인
+          </Link>
+          <Link
+            href="/signup"
+            className="inline-flex items-center justify-center rounded-md text-xs font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 h-8 px-3"
+          >
+            회원가입
+          </Link>
+        </div>
       </div>
     </header>
   );
