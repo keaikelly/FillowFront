@@ -517,6 +517,7 @@ export default function AnalysisView({
         <button
           type="button"
           className="w-full h-12 rounded-full bg-primary text-primary-foreground text-sm font-semibold inline-flex items-center justify-center gap-2 shadow-sm hover:bg-primary/90"
+          onClick={() => alert("국세청 장부 동기화 기능은 준비중입니다!")}
         >
           <DollarSign className="h-4 w-4" />
           국세청 장부로 동기화
