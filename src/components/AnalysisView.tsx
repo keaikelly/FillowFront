@@ -11,7 +11,7 @@ import {
 } from "./ui/card";
 
 // 고정비+변동비 도넛차트
-import UnifiedCostChart from "./unified-cost-chart";
+import UnifiedCostChart from "./donutChart";
 // 아이콘
 import {
   BarChart3,
@@ -194,6 +194,7 @@ export default function AnalysisView({
                 </p>
               </div>
             </div>
+            <hr />
             {/* 도넛 차트 */}
             <UnifiedCostChart
               fixedCosts={computedFixedItems}
