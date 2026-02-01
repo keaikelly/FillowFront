@@ -95,8 +95,10 @@ export default function UnifiedCostChart({
     return [`₩${numericValue.toLocaleString()}`, String(name)];
   };
 
-  // Legend formatter 차트 하단에 표시되는 범례 이름 영역. 문자열만 반환하도록
-  const legendFormatter = (value: string | number) => String(value);
+  // Legend formatter 차트 하단에 표시되는 범례 이름 영역. 텍스트는 진회색 고정
+  const legendFormatter = (value: string | number) => (
+    <span className="text-gray-700">{String(value)}</span>
+  );
 
   return (
     <div className="space-y-6">
@@ -140,7 +142,8 @@ export default function UnifiedCostChart({
           {/* h-400px은 높이를 400으로 지정한 것.
           ResponsiveContainer는 부모가 "높이/너비를 실제로 가지고 있어야" 정상 동작 */}
 
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height={400}>
+            {" "}
             <PieChart>
               <Pie
                 data={data} // 우리가 만든 차트 데이터
