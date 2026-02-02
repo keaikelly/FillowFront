@@ -12,7 +12,7 @@ export default function PlanPage() {
   const handlePlanSelect = (planName: string) => {
     setSelectedPlan(planName);
     // TODO: 나중에 백엔드에 선택한 플랜 저장(API 호출)
-    router.push("/product");
+    router.push(`/payment?plan=${planName}`);
   };
 
   return (
