@@ -2,6 +2,7 @@
 // Next.js App Router에서 이 파일이 Client Component임을 명시
 // (useState, onClick 같은 브라우저 상호작용을 쓰기 위함)
 
+import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import MainHeader from "@/components/MainHeader";
 import {
@@ -13,7 +14,7 @@ import {
 } from "@/components/ui/card";
 
 // 결제 페이지 컴포넌트
-export default function PaymentPage() {
+function PaymentPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const planParam = searchParams.get("plan") ?? "standard"; //주소에서 plan= 쿼리 파라미터로 구분
@@ -201,5 +202,14 @@ export default function PaymentPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+// 결제 페이지 컴포넌트
+export default function PaymentPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-white" />}>
+      <PaymentPageContent />
+    </Suspense>
   );
 }
