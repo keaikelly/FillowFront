@@ -14,10 +14,14 @@ type ChannelStepProps = {
   environment: "online" | "offline";
   platform: string; //온라인일 때 플랫폼
   location: string; //오프라인일 때 매장 위치
+  commission: string; // 온라인 수수료 (%)
+  rent: string; // 오프라인 월 임대료 (원)
 
   onEnvironmentChange: (env: "online" | "offline") => void; //환경변경시호출
   onPlatformChange: (value: string) => void; // 플랫폼 선택 변경 시 호출
   onLocationChange: (value: string) => void; // 매장 위치 선택 변경 시 호출
+  onCommissionChange: (value: string) => void; // 수수료 입력 변경
+  onRentChange: (value: string) => void; // 임대료 입력 변경
 
   onBack: () => void; // 이전 단계로 돌아가기
   onCalculate: () => void; // 계산 실행 버튼 클릭 시
@@ -28,15 +32,49 @@ export default function ChannelStep({
   environment,
   platform,
   location,
+  commission,
+  rent,
   onEnvironmentChange,
   onPlatformChange,
   onLocationChange,
+  onCommissionChange,
+  onRentChange,
   onBack,
   onCalculate,
 }: ChannelStepProps) {
+  // ===== 직접 입력을 구분하기 위한 규칙 =====
+  // select에서 "직접 입력"을 고르면 상태값을 "custom:사용자입력" 형태로 저장
+  const CUSTOM_PREFIX = "custom:";
+  // 현재 값이 직접 입력인지 체크 (custom: 으로 시작하면 직접 입력)
+  const isCustomValue = (value: string) => value.startsWith(CUSTOM_PREFIX);
+  // "custom:"을 떼고 실제 입력값만 꺼내오기
+  const getCustomValue = (value: string) =>
+    isCustomValue(value) ? value.slice(CUSTOM_PREFIX.length) : ""; //자르는 시작점이 prefix 길이(prefix 이후를 get)
+
+  // select 칸에 실제로 표시될 값
+  // - 직접 입력이면 "custom"을 보여주고
+  // - 아니면 원래 선택된 value를 그대로 보여줌
+  const platformSelectValue = isCustomValue(platform) ? "custom" : platform;
+  const locationSelectValue = isCustomValue(location) ? "custom" : location;
+
+  // 유효한 값인지 확인 (직접 입력이면 빈 값인지 체크)
+  const platformValid = isCustomValue(platform)
+    ? getCustomValue(platform).trim()
+    : platform;
+  const locationValid = isCustomValue(location)
+    ? getCustomValue(location).trim()
+    : location;
+  // 직접 입력 모드인지 여부 (입력칸을 보여줄지 결정)
+  const isCustomPlatform = platformSelectValue === "custom";
+  const isCustomLocation = locationSelectValue === "custom";
+
   const canCalculate = //버튼 활성화 조건
-    (environment === "online" && platform) || // - 온라인: platform이 선택되어 있어야 함
-    (environment === "offline" && location); // - 오프라인: location이 선택되어 있어야 함
+    (environment === "online" &&
+      platformValid &&
+      (!isCustomPlatform || commission.trim())) || // - 온라인: custom이면 수수료도 필요
+    (environment === "offline" &&
+      locationValid &&
+      (!isCustomLocation || rent.trim())); // - 오프라인: custom이면 임대료도 필요
 
   return (
     <div className="pt-8 space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -112,8 +150,13 @@ export default function ChannelStep({
               <select
                 id="platform"
                 className="flex h-10 w-full rounded-md border border-input bg-background px-2 py-2 text-sm shadow-sm"
-                value={platform}
-                onChange={(e) => onPlatformChange(e.target.value)}
+                value={platformSelectValue}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  onPlatformChange(
+                    value === "custom" ? `${CUSTOM_PREFIX}` : value,
+                  );
+                }}
               >
                 <option value="" disabled>
                   플랫폼을 선택하세요
@@ -126,7 +169,48 @@ export default function ChannelStep({
                 <option value="gmarket">
                   지마켓 (수수료 4~15%-카테고리별 상이)
                 </option>
+                <option value="custom">직접 입력</option> {/* 직접 입력 옵션 */}
               </select>
+              {/* 새로 추가: 직접 입력 선택 시, 이름/수수료를 한 줄 2열로 입력 */}
+              {isCustomPlatform && (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="customPlatform"
+                      className="text-xs font-medium text-muted-foreground"
+                    >
+                      플랫폼 이름
+                    </label>
+                    <input
+                      id="customPlatform"
+                      type="text"
+                      placeholder="플랫폼 이름 직접 입력"
+                      className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-primary"
+                      value={getCustomValue(platform)}
+                      onChange={(e) =>
+                        onPlatformChange(`${CUSTOM_PREFIX}${e.target.value}`)
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="commission"
+                      className="text-xs font-medium text-muted-foreground"
+                    >
+                      수수료 (% 또는 원)
+                    </label>
+                    <input
+                      id="commission"
+                      type="text"
+                      inputMode="decimal"
+                      placeholder="예: 8% 또는 1000원"
+                      className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-primary"
+                      value={commission}
+                      onChange={(e) => onCommissionChange(e.target.value)}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             /* 오프라인일 경우: 매장 위치 선택 */
@@ -140,8 +224,13 @@ export default function ChannelStep({
               <select
                 id="location"
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm"
-                value={location}
-                onChange={(e) => onLocationChange(e.target.value)}
+                value={locationSelectValue}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  onLocationChange(
+                    value === "custom" ? `${CUSTOM_PREFIX}` : value,
+                  );
+                }}
               >
                 <option value="" disabled>
                   위치를 선택하세요
@@ -152,7 +241,48 @@ export default function ChannelStep({
                 <option value="jeolla">전라권 (₩1,400,000/월)</option>
                 <option value="gyeongsang">경상권 (₩1,600,000/월)</option>
                 <option value="gangwon">강원/제주권 (₩1,200,000/월)</option>
+                <option value="custom">직접 입력</option>
               </select>
+              {/* 새로 추가: 직접 입력 선택 시, 위치/임대료를 한 줄 2열로 입력 */}
+              {isCustomLocation && (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="customLocation"
+                      className="text-xs font-medium text-muted-foreground"
+                    >
+                      매장 위치
+                    </label>
+                    <input
+                      id="customLocation"
+                      type="text"
+                      placeholder="매장 위치 직접 입력"
+                      className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-primary"
+                      value={getCustomValue(location)}
+                      onChange={(e) =>
+                        onLocationChange(`${CUSTOM_PREFIX}${e.target.value}`)
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="rent"
+                      className="text-xs font-medium text-muted-foreground"
+                    >
+                      월 임대료 (원)
+                    </label>
+                    <input
+                      id="rent"
+                      type="text"
+                      inputMode="numeric"
+                      placeholder="예: 2000000"
+                      className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-primary"
+                      value={rent}
+                      onChange={(e) => onRentChange(e.target.value)}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           )}
           {/* 하단 버튼 영역 */}

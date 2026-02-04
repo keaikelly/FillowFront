@@ -16,6 +16,8 @@ export default function ChannelPage() {
   );
   const [platform, setPlatform] = useState("");
   const [location, setLocation] = useState("");
+  const [commission, setCommission] = useState("");
+  const [rent, setRent] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleCalculate = async () => {
@@ -38,9 +40,13 @@ export default function ChannelPage() {
             environment={environment}
             platform={platform}
             location={location}
+            commission={commission}
+            rent={rent}
             onEnvironmentChange={setEnvironment}
             onPlatformChange={setPlatform}
             onLocationChange={setLocation}
+            onCommissionChange={setCommission}
+            onRentChange={setRent}
             onBack={() => router.push("/product")}
             onCalculate={handleCalculate}
           />
