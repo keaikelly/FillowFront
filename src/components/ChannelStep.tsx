@@ -15,13 +15,15 @@ type ChannelStepProps = {
   platform: string; //온라인일 때 플랫폼
   location: string; //오프라인일 때 매장 위치
   commission: string; // 온라인 수수료 (%)
-  rent: string; // 오프라인 월 임대료 (원)
+  deposit: string; // 오프라인 보증금
+  monthlyRent: string; // 오프라인 월세
 
   onEnvironmentChange: (env: "online" | "offline") => void; //환경변경시호출
   onPlatformChange: (value: string) => void; // 플랫폼 선택 변경 시 호출
   onLocationChange: (value: string) => void; // 매장 위치 선택 변경 시 호출
   onCommissionChange: (value: string) => void; // 수수료 입력 변경
-  onRentChange: (value: string) => void; // 임대료 입력 변경
+  onDepositChange: (value: string) => void; // 보증금 입력 변경
+  onMonthlyRentChange: (value: string) => void; // 월세 입력 변경
 
   onBack: () => void; // 이전 단계로 돌아가기
   onCalculate: () => void; // 계산 실행 버튼 클릭 시
@@ -33,12 +35,14 @@ export default function ChannelStep({
   platform,
   location,
   commission,
-  rent,
+  deposit,
+  monthlyRent,
   onEnvironmentChange,
   onPlatformChange,
   onLocationChange,
   onCommissionChange,
-  onRentChange,
+  onDepositChange,
+  onMonthlyRentChange,
   onBack,
   onCalculate,
 }: ChannelStepProps) {
@@ -74,10 +78,10 @@ export default function ChannelStep({
       (!isCustomPlatform || commission.trim())) || // - 온라인: custom이면 수수료도 필요
     (environment === "offline" &&
       locationValid &&
-      (!isCustomLocation || rent.trim())); // - 오프라인: custom이면 임대료도 필요
+      (!isCustomLocation || (deposit.trim() && monthlyRent.trim()))); // - 오프라인: custom이면 보증금/월세 필요
 
   return (
-    <div className="pt-8 space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="pt-8 space-y-10">
       {/* 상단 제목 영역 */}
       <div className="text-center space-y-2">
         <h2 className="text-4xl font-bold">판매 채널 선택</h2>
@@ -99,8 +103,8 @@ export default function ChannelStep({
           // 클릭 시 판매 환경을 online으로 변경
           onClick={() => onEnvironmentChange("online")}
         >
-          <CardHeader>
-            <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+          <CardHeader className="py-4">
+            <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
               <ShoppingCart className="h-6 w-6 text-primary" />
             </div>
             <CardTitle>온라인 (플랫폼)</CardTitle>
@@ -120,8 +124,8 @@ export default function ChannelStep({
           // 클릭 시 판매 환경을 offline으로 변경
           onClick={() => onEnvironmentChange("offline")}
         >
-          <CardHeader>
-            <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+          <CardHeader className="py-3">
+            <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
               <Building2 className="h-6 w-6 text-primary" />
             </div>
             <CardTitle>오프라인 (매장)</CardTitle>
@@ -134,7 +138,7 @@ export default function ChannelStep({
 
       {/* 상세 선택 영역 (환경에 따라 내용 변경) */}
       <Card className="max-w-2xl mx-auto border-2 rounded-[40px] shadow-sm">
-        <CardContent className="pt-6 pb-6 space-y-6">
+        <CardContent className="pt-4 pb-4 space-y-4">
           {/* 상단 안내 텍스트 */}
           <p className="font-semibold">세부 정보</p>
 
@@ -245,7 +249,8 @@ export default function ChannelStep({
               </select>
               {/* 새로 추가: 직접 입력 선택 시, 위치/임대료를 한 줄 2열로 입력 */}
               {isCustomLocation && (
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div>
+                  {" "}
                   <div className="space-y-2">
                     <label
                       htmlFor="customLocation"
@@ -264,27 +269,47 @@ export default function ChannelStep({
                       }
                     />
                   </div>
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="rent"
-                      className="text-xs font-medium text-muted-foreground"
-                    >
-                      월 임대료 (원)
-                    </label>
-                    <input
-                      id="rent"
-                      type="text"
-                      inputMode="numeric"
-                      placeholder="예: 2000000"
-                      className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-primary"
-                      value={rent}
-                      onChange={(e) => onRentChange(e.target.value)}
-                    />
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="deposit"
+                        className="text-xs font-medium text-muted-foreground"
+                      >
+                        보증금 (원)
+                      </label>
+                      <input
+                        id="deposit"
+                        type="text"
+                        inputMode="numeric"
+                        placeholder="예: 10000000"
+                        className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-primary"
+                        value={deposit}
+                        onChange={(e) => onDepositChange(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="monthlyRent"
+                        className="text-xs font-medium text-muted-foreground"
+                      >
+                        월세 (관리비 포함)
+                      </label>
+                      <input
+                        id="monthlyRent"
+                        type="text"
+                        inputMode="numeric"
+                        placeholder="예: 2000000"
+                        className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-primary"
+                        value={monthlyRent}
+                        onChange={(e) => onMonthlyRentChange(e.target.value)}
+                      />
+                    </div>
                   </div>
                 </div>
               )}
             </div>
           )}
+
           {/* 하단 버튼 영역 */}
           <div className="flex gap-4">
             {/* 이전 단계 버튼 */}

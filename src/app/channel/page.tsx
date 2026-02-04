@@ -12,12 +12,14 @@ export default function ChannelPage() {
   const router = useRouter();
   //상태가 online or offline. 초기값은 online
   const [environment, setEnvironment] = useState<"online" | "offline">(
-    "online"
+    "online",
   );
   const [platform, setPlatform] = useState("");
   const [location, setLocation] = useState("");
   const [commission, setCommission] = useState("");
-  const [rent, setRent] = useState("");
+  const [deposit, setDeposit] = useState("");
+  const [monthlyRent, setMonthlyRent] = useState("");
+  const [maintenanceFee, setMaintenanceFee] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleCalculate = async () => {
@@ -41,12 +43,14 @@ export default function ChannelPage() {
             platform={platform}
             location={location}
             commission={commission}
-            rent={rent}
+            deposit={deposit}
+            monthlyRent={monthlyRent}
             onEnvironmentChange={setEnvironment}
             onPlatformChange={setPlatform}
             onLocationChange={setLocation}
             onCommissionChange={setCommission}
-            onRentChange={setRent}
+            onDepositChange={setDeposit}
+            onMonthlyRentChange={setMonthlyRent}
             onBack={() => router.push("/product")}
             onCalculate={handleCalculate}
           />
