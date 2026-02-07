@@ -43,7 +43,10 @@ type AnalysisViewProps = {
   variableItems: CostItem[];
   fixedItems: CostItem[];
   includeLoanInterest: boolean;
-  loanInterest: number;
+  loanPrincipal: string;
+  loanAnnualRate: string;
+  loanTermMonths: string;
+  loanMonthlyPayment: number;
   newVariableName: string;
   newVariableAmount: string;
   newFixedName: string;
@@ -58,7 +61,9 @@ type AnalysisViewProps = {
   onSunkItemsChange: (items: CostItem[]) => void;
   onExportExcel: () => void;
   onIncludeLoanInterestChange: (next: boolean) => void;
-  onLoanInterestChange: (value: number) => void;
+  onLoanPrincipalChange: (value: string) => void;
+  onLoanAnnualRateChange: (value: string) => void;
+  onLoanTermMonthsChange: (value: string) => void;
   onNewVariableNameChange: (value: string) => void;
   onNewVariableAmountChange: (value: string) => void;
   onNewFixedNameChange: (value: string) => void;
@@ -74,7 +79,10 @@ export default function AnalysisView({
   variableItems,
   fixedItems,
   includeLoanInterest,
-  loanInterest,
+  loanPrincipal,
+  loanAnnualRate,
+  loanTermMonths,
+  loanMonthlyPayment,
   newVariableName,
   newVariableAmount,
   newFixedName,
@@ -89,7 +97,9 @@ export default function AnalysisView({
   onSunkItemsChange,
   onExportExcel,
   onIncludeLoanInterestChange,
-  onLoanInterestChange,
+  onLoanPrincipalChange,
+  onLoanAnnualRateChange,
+  onLoanTermMonthsChange,
   onNewVariableNameChange,
   onNewVariableAmountChange,
   onNewFixedNameChange,
@@ -363,30 +373,75 @@ export default function AnalysisView({
             <CardContent className="pt-6">
               <div className="space-y-3">
                 {/* 대출이자 포함 토글 */}
-                <div className="grid grid-cols-[1fr_140px_90px] gap-3 items-center text-sm">
-                  <span className="text-muted-foreground">대출이자</span>
-                  <input
-                    type="number"
-                    className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm text-right focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-blue-600 disabled:opacity-60"
-                    value={loanInterest}
-                    onChange={(e) =>
-                      onLoanInterestChange(Number(e.target.value || 0))
-                    }
-                    disabled={!includeLoanInterest}
-                  />
-                  <button
-                    type="button"
-                    onClick={() =>
-                      onIncludeLoanInterestChange(!includeLoanInterest)
-                    }
-                    className={`h-9 rounded-full border px-3 text-xs font-medium ${
-                      includeLoanInterest
-                        ? "border-blue-200 bg-blue-50 text-blue-700"
-                        : "border-border bg-white text-muted-foreground"
-                    }`}
-                  >
-                    {includeLoanInterest ? "포함" : "미포함"}
-                  </button>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">대출 이자</span>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        onIncludeLoanInterestChange(!includeLoanInterest)
+                      }
+                      className={`h-9 rounded-full border px-3 text-xs font-medium ${
+                        includeLoanInterest
+                          ? "border-blue-200 bg-blue-50 text-blue-700"
+                          : "border-border bg-white text-muted-foreground"
+                      }`}
+                    >
+                      {includeLoanInterest ? "포함" : "미포함"}
+                    </button>
+                  </div>
+
+                  <div className="grid gap-3 sm:grid-cols-3">
+                    <div className="space-y-1">
+                      <label className="text-xs text-muted-foreground">
+                        대출금
+                      </label>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm text-right focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-blue-600 disabled:opacity-60"
+                        value={loanPrincipal}
+                        onChange={(e) => onLoanPrincipalChange(e.target.value)}
+                        disabled={!includeLoanInterest} //대출이자 미포함 시 비활성화
+                        placeholder="예: 50000000"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs text-muted-foreground">
+                        연이율 (%)
+                      </label>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm text-right focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-blue-600 disabled:opacity-60"
+                        value={loanAnnualRate}
+                        onChange={(e) => onLoanAnnualRateChange(e.target.value)}
+                        disabled={!includeLoanInterest}
+                        placeholder="예: 6.5"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs text-muted-foreground">
+                        상환기간 (개월)
+                      </label>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm text-right focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-blue-600 disabled:opacity-60"
+                        value={loanTermMonths}
+                        onChange={(e) => onLoanTermMonthsChange(e.target.value)}
+                        disabled={!includeLoanInterest}
+                        placeholder="예: 36"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between rounded-lg bg-blue-50 px-3 py-2 text-xs text-blue-700">
+                    <span>예상 월 상환액</span>
+                    <span className="font-semibold">
+                      ₩{Math.round(loanMonthlyPayment).toLocaleString()}
+                    </span>
+                  </div>
                 </div>
 
                 {/* 고정비 항목 편집 */}

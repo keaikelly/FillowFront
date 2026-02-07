@@ -37,7 +37,9 @@ export default function AnalysisPage() {
   const [variableItems, setVariableItems] = useState(dummyVariableCostItems);
   const [fixedItems, setFixedItems] = useState(dummyFixedCostItems);
   const [includeLoanInterest, setIncludeLoanInterest] = useState(false);
-  const [loanInterest, setLoanInterest] = useState(0);
+  const [loanPrincipal, setLoanPrincipal] = useState(""); //대출금
+  const [loanAnnualRate, setLoanAnnualRate] = useState(""); //연이율
+  const [loanTermMonths, setLoanTermMonths] = useState(""); //대출기간(개월)
   const [newVariableName, setNewVariableName] = useState("");
   const [newVariableAmount, setNewVariableAmount] = useState("");
   const [newFixedName, setNewFixedName] = useState("");
@@ -49,19 +51,41 @@ export default function AnalysisPage() {
   ]);
 
   // 대출이자 포함 여부에 따른 고정비 계산
+  // 대출 정보로 "월 상환액" 계산 (원리금균등 방식)
+  const loanMonthlyPayment = useMemo(() => {
+    if (!includeLoanInterest) return 0; //대출이자 미포함이면 0
+    const principal = Number(loanPrincipal || 0);
+    const annualRate = Number(loanAnnualRate || 0);
+    const termMonths = Number(loanTermMonths || 0);
+    // 입력이 비어있으면 계산하지 않음
+    if (!principal || !termMonths) return 0;
+    const monthlyRate = annualRate / 100 / 12; //연이율->월이율로 변환
+    // 이자 0% 무이자면, 원금만 나눠서 계산
+    if (monthlyRate === 0) return principal / termMonths;
+    // 원리금균등의 분모계산: P * r / (1 - (1+r)^-n)
+    const denominator = 1 - Math.pow(1 + monthlyRate, -termMonths);
+    if (denominator === 0) return 0;
+    // 월상환액: 원금 * (월이율 / 분모)
+    return principal * (monthlyRate / denominator);
+  }, [includeLoanInterest, loanPrincipal, loanAnnualRate, loanTermMonths]);
+
   const computedFixedItems = useMemo(() => {
-    if (!includeLoanInterest) return fixedItems;
+    if (!includeLoanInterest) return fixedItems; //대출이자 미포함 시 기존 고정비 반환
     return [
-      ...fixedItems,
-      { id: "loan-interest", name: "대출이자", amount: loanInterest },
+      ...fixedItems, //기존 고정비 복사
+      {
+        id: "loan-interest",
+        name: "대출이자",
+        amount: Math.round(loanMonthlyPayment),
+      }, //대출이자 항목 추가
     ];
-  }, [fixedItems, includeLoanInterest, loanInterest]);
+  }, [fixedItems, includeLoanInterest, loanMonthlyPayment]); //이 항목이 변경될 때 재계산 (useMemo)
 
   // 합계 계산
   const totalFixedValue = useMemo(() => {
     return computedFixedItems.reduce(
       (sum, item) => sum + (item.amount || 0),
-      0
+      0,
     );
   }, [computedFixedItems]);
 
@@ -150,7 +174,10 @@ export default function AnalysisPage() {
           variableItems={variableItems}
           fixedItems={fixedItems}
           includeLoanInterest={includeLoanInterest}
-          loanInterest={loanInterest}
+          loanPrincipal={loanPrincipal}
+          loanAnnualRate={loanAnnualRate}
+          loanTermMonths={loanTermMonths}
+          loanMonthlyPayment={loanMonthlyPayment}
           newVariableName={newVariableName}
           newVariableAmount={newVariableAmount}
           newFixedName={newFixedName}
@@ -165,7 +192,9 @@ export default function AnalysisPage() {
           onSunkItemsChange={setSunkItems}
           onExportExcel={handleExportExcel}
           onIncludeLoanInterestChange={setIncludeLoanInterest}
-          onLoanInterestChange={setLoanInterest}
+          onLoanPrincipalChange={setLoanPrincipal}
+          onLoanAnnualRateChange={setLoanAnnualRate}
+          onLoanTermMonthsChange={setLoanTermMonths}
           onNewVariableNameChange={setNewVariableName}
           onNewVariableAmountChange={setNewVariableAmount}
           onNewFixedNameChange={setNewFixedName}
