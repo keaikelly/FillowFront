@@ -209,6 +209,15 @@ export default function AnalysisView({
                 </AlertDescription>
               </Alert>
             )}
+            {margin >= 10 && margin < 20 && (
+              <Alert className="border-green-200 bg-green-50">
+                <AlertCircle className="h-4 w-4 text-green-600" />
+                <AlertDescription className="text-green-800">
+                  마진이 양호한 편입니다. 지속적인 모니터링을 통해 비용 구조를
+                  최적화하세요.{" "}
+                </AlertDescription>
+              </Alert>
+            )}
             {margin < 10 && (
               <Alert className="border-red-200 bg-red-50">
                 <AlertCircle className="h-4 w-4 text-red-600" />
@@ -251,7 +260,7 @@ export default function AnalysisView({
                                     ...entry,
                                     amount: newAmount,
                                   } //현재 수정중 항목이면 newAmount로 변경
-                                : entry // 다른 항목은 그대로 반환
+                                : entry, // 다른 항목은 그대로 반환
                           );
 
                           onVariableItemsChange(next);
@@ -265,8 +274,8 @@ export default function AnalysisView({
                         onClick={() =>
                           onVariableItemsChange(
                             variableItems.filter(
-                              (entry) => entry.id !== item.id //현재 클릭한 id가 아닌 다른 항목들만 남김(filter), 즉 제거
-                            )
+                              (entry) => entry.id !== item.id, //현재 클릭한 id가 아닌 다른 항목들만 남김(filter), 즉 제거
+                            ),
                           )
                         }
                         className="h-10 w-10 rounded-md border border-border text-destructive hover:bg-destructive/10"
@@ -397,7 +406,7 @@ export default function AnalysisView({
                                   ...entry,
                                   amount: Number(e.target.value || 0),
                                 }
-                              : entry
+                              : entry,
                           );
                           onFixedItemsChange(next);
                         }}
@@ -409,7 +418,7 @@ export default function AnalysisView({
                         type="button"
                         onClick={() =>
                           onFixedItemsChange(
-                            fixedItems.filter((entry) => entry.id !== item.id)
+                            fixedItems.filter((entry) => entry.id !== item.id),
                           )
                         }
                         className="h-10 w-10 rounded-md border border-border text-destructive hover:bg-destructive/10"
