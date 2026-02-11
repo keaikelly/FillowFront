@@ -26,6 +26,13 @@ export default function MainHeader() {
         </Link>
         {/* 오른쪽 영역: 로그인 / 회원가입 */}
         <div className="flex items-center gap-2">
+          {/* 로그인 시 로그인/회원가입 대신 마이페이지로 변경 */}
+          {/* <Link
+            href="/mypage"
+            className="inline-flex items-center justify-center rounded-md text-xs font-medium px-3 h-8 text-muted-foreground hover:text-foreground hover:bg-muted/50"
+          >
+            마이페이지
+          </Link>  */}
           <Link
             href="/login"
             className="inline-flex items-center justify-center rounded-md text-xs font-medium px-3 h-8 text-muted-foreground hover:text-foreground hover:bg-muted/50"
