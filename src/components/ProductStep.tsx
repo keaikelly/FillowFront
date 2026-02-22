@@ -64,11 +64,11 @@ export function ProductStep({
               htmlFor="productName"
               className="text-sm font-medium leading-none"
             >
-              제품명
+              제품/사업 이름
             </label>
             <input
               id="productName"
-              placeholder="예: 프리미엄 가죽 지갑"
+              placeholder="예: 가죽지갑 / 카페"
               // 부모 상태를 그대로 사용 (controlled input)
               value={productName} //부모의 상태 사용
               onChange={(e) => onChangeName(e.target.value)} //타이핑 시 이름 onChangeName으로 setProductName (부모로 값 전달)
