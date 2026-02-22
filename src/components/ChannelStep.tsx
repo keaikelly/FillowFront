@@ -244,8 +244,9 @@ export default function ChannelStep({
                 <option value="chungcheong">충청권 (₩1,500,000/월)</option>
                 <option value="jeolla">전라권 (₩1,400,000/월)</option>
                 <option value="gyeongsang">경상권 (₩1,600,000/월)</option>
-                <option value="gangwon">강원/제주권 (₩1,200,000/월)</option>
-                <option value="custom">직접 입력</option>
+                <option value="gangwon">강원권 (₩1,200,000/월)</option>
+                <option value="jeju">제주권 (₩1,200,000/월)</option>
+                <option value="custom">직접 입력 </option>
               </select>
               {/* 새로 추가: 직접 입력 선택 시, 위치/임대료를 한 줄 2열로 입력 */}
               {isCustomLocation && (

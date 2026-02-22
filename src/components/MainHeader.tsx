@@ -2,6 +2,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 // 메인 헤더 컴포넌트
 export default function MainHeader() {
@@ -16,7 +17,7 @@ export default function MainHeader() {
         {/* 왼쪽 영역: 로고 + 슬로건 */}
         <Link href="/" className="flex items-center gap-4">
           {/*로고 누르면 첫 페이지 (플랜)*/}
-          <img src="/logo.png" alt="Logo" className="h-10 w-auto" />
+          <Image src="/logo.png" alt="Logo" width={80} height={40} className="h-10 w-auto" priority />
           <div className="border-l pl-4">
             {/*왼쪽 선*/}
             <p className="text-xs text-muted-foreground">
@@ -26,13 +27,6 @@ export default function MainHeader() {
         </Link>
         {/* 오른쪽 영역: 로그인 / 회원가입 */}
         <div className="flex items-center gap-2">
-          {/* 로그인 시 로그인/회원가입 대신 마이페이지로 변경 */}
-          {/* <Link
-            href="/mypage"
-            className="inline-flex items-center justify-center rounded-md text-xs font-medium px-3 h-8 text-muted-foreground hover:text-foreground hover:bg-muted/50"
-          >
-            마이페이지
-          </Link>  */}
           <Link
             href="/login"
             className="inline-flex items-center justify-center rounded-md text-xs font-medium px-3 h-8 text-muted-foreground hover:text-foreground hover:bg-muted/50"
