@@ -6,7 +6,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import MainHeader from "@/components/MainHeader";
 import ChannelStep from "@/components/ChannelStep";
-import { ProductLoading } from "@/components/ProductStep";
 
 export default function ChannelPage() {
   const router = useRouter();
@@ -19,12 +18,11 @@ export default function ChannelPage() {
   const [commission, setCommission] = useState("");
   const [deposit, setDeposit] = useState("");
   const [monthlyRent, setMonthlyRent] = useState("");
-  const [maintenanceFee, setMaintenanceFee] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleCalculate = async () => {
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 800));
+    //await new Promise((r) => setTimeout(r, 800));
     // TODO: 나중에 fetch("/api/...")로 플랫폼/위치 정보를 보내고 계산을 요청
     router.push("/analysis");
     setLoading(false);
@@ -35,26 +33,22 @@ export default function ChannelPage() {
       {/* 3단계 채널 선택 화면 */}
       <MainHeader />
       <main className="container mx-auto px-4 py-8 max-w-6xl">
-        {loading ? (
-          <ProductLoading />
-        ) : (
-          <ChannelStep
-            environment={environment}
-            platform={platform}
-            location={location}
-            commission={commission}
-            deposit={deposit}
-            monthlyRent={monthlyRent}
-            onEnvironmentChange={setEnvironment}
-            onPlatformChange={setPlatform}
-            onLocationChange={setLocation}
-            onCommissionChange={setCommission}
-            onDepositChange={setDeposit}
-            onMonthlyRentChange={setMonthlyRent}
-            onBack={() => router.push("/product")}
-            onCalculate={handleCalculate}
-          />
-        )}
+        <ChannelStep
+          environment={environment}
+          platform={platform}
+          location={location}
+          commission={commission}
+          deposit={deposit}
+          monthlyRent={monthlyRent}
+          onEnvironmentChange={setEnvironment}
+          onPlatformChange={setPlatform}
+          onLocationChange={setLocation}
+          onCommissionChange={setCommission}
+          onDepositChange={setDeposit}
+          onMonthlyRentChange={setMonthlyRent}
+          onBack={() => router.push("/product")}
+          onCalculate={handleCalculate}
+        />
       </main>
     </div>
   );

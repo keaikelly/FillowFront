@@ -17,7 +17,7 @@ export default function ProductPage() {
     setLoading(true);
     try {
       // TODO: 나중에 백엔드에 제품 정보 저장(API 호출, await 비동기처리(동기로. 결과가 올때까지 기다림))
-      await new Promise((r) => setTimeout(r, 800)); // 데모용으로 최소 0.8초는 로딩 보여주기
+      //await new Promise((r) => setTimeout(r, 800)); // 데모용으로 최소 0.8초는 로딩 보여주기
       router.push("/channel");
     } finally {
       setLoading(false);
