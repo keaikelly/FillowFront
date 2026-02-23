@@ -29,6 +29,7 @@ function PaymentPageContent() {
   const selectedPlan = planMap[planParam] ?? planMap.standard; //planMap에서 찾고 오류 시 standard
 
   const handlePayment = () => {
+    localStorage.setItem("selectedPlan", planParam);
     router.push("/product");
     //추후 실제 결제 로직 연동 예정
   };

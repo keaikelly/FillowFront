@@ -51,15 +51,14 @@ type AnalysisViewProps = {
   newVariableAmount: string;
   newFixedName: string;
   newFixedAmount: string;
-  sunkItems: CostItem[];
   computedFixedItems: CostItem[];
   totalFixedValue: number;
   totalVariableValue: number;
-  totalSunkValue: number;
   onVariableItemsChange: (items: CostItem[]) => void;
   onFixedItemsChange: (items: CostItem[]) => void;
-  onSunkItemsChange: (items: CostItem[]) => void;
   onExportExcel: () => void;
+  isExtensionPlan: boolean;
+  onSaveAndCompare: () => void;
   onIncludeLoanInterestChange: (next: boolean) => void;
   onLoanPrincipalChange: (value: string) => void;
   onLoanAnnualRateChange: (value: string) => void;
@@ -87,15 +86,14 @@ export default function AnalysisView({
   newVariableAmount,
   newFixedName,
   newFixedAmount,
-  sunkItems,
   computedFixedItems,
   totalFixedValue,
   totalVariableValue,
-  totalSunkValue,
   onVariableItemsChange,
   onFixedItemsChange,
-  onSunkItemsChange,
   onExportExcel,
+  isExtensionPlan,
+  onSaveAndCompare,
   onIncludeLoanInterestChange,
   onLoanPrincipalChange,
   onLoanAnnualRateChange,
@@ -542,35 +540,15 @@ export default function AnalysisView({
               </div>
             </CardContent>
           </Card>
-
-          {/* 초기 투자 비용(PSI) 요약 */}
-          <Card>
-            <CardHeader className="bg-gray-50 border-b">
-              <CardTitle className="text-base">
-                초기 투자 비용 (Primary Sunk Investment)
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="space-y-3">
-                <div className="text-sm font-semibold mb-2">List of costs</div>
-                {sunkItems.map((item) => (
-                  <div key={item.id} className="flex justify-between text-sm">
-                    <span>{item.name}</span>
-                    <span>₩ {item.amount.toLocaleString()}</span>
-                  </div>
-                ))}
-                <div className="border-t pt-3 flex justify-between text-sm font-semibold">
-                  <span>= Total PSI</span>
-                  <span>₩ {totalSunkValue.toLocaleString()}</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </div>
 
       {/* 저장/동기화 액션 */}
-      <div className="grid md:grid-cols-2 gap-4">
+      <div
+        className={`grid gap-4 ${
+          isExtensionPlan ? "md:grid-cols-3" : "md:grid-cols-2"
+        }`}
+      >
         <button
           type="button"
           className="w-full h-12 rounded-full bg-primary text-primary-foreground text-sm font-semibold inline-flex items-center justify-center gap-2 shadow-sm hover:bg-primary/90"
@@ -587,6 +565,16 @@ export default function AnalysisView({
           <DollarSign className="h-4 w-4" />
           국세청 장부로 동기화
         </button>
+        {isExtensionPlan && (
+          <button
+            type="button"
+            className="w-full h-12 rounded-full border border-primary/25 bg-white text-primary text-sm font-semibold inline-flex items-center justify-center gap-2 hover:bg-primary/5"
+            onClick={onSaveAndCompare}
+          >
+            <TrendingUp className="h-4 w-4" />
+            저장 후 상세 시뮬레이션 비교
+          </button>
+        )}
       </div>
     </div>
   );

@@ -18,14 +18,23 @@ export default function ChannelPage() {
   const [commission, setCommission] = useState("");
   const [deposit, setDeposit] = useState("");
   const [monthlyRent, setMonthlyRent] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const handleCalculate = async () => {
-    setLoading(true);
+  const handleCalculate = () => {
     //await new Promise((r) => setTimeout(r, 800));
     // TODO: 나중에 fetch("/api/...")로 플랫폼/위치 정보를 보내고 계산을 요청
+    // 분석 페이지에서 같은 조건을 읽을 수 있도록 임시 저장
+    localStorage.setItem(
+      "simulationChannelData",
+      JSON.stringify({
+        environment,
+        platform,
+        location,
+        commission,
+        deposit,
+        monthlyRent,
+      }),
+    );
     router.push("/analysis");
-    setLoading(false);
   };
 
   return (
